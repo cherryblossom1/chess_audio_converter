@@ -1,0 +1,4 @@
+Makefile
+*.wav
+*.m
+__pycache__/

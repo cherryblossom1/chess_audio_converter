@@ -1,0 +1,22 @@
+[Event "Live Chess"]
+[Site "Chess.com"]
+[Date "2022.02.06"]
+[Round "?"]
+[White "guyswithacape"]
+[Black "prajaktasathe"]
+[Result "0-1"]
+[ECO "C25"]
+[WhiteElo "1172"]
+[BlackElo "121"]
+[TimeControl "1200"]
+[EndTime "6:55:22 PST"]
+[Termination "prajaktasathe won by checkmate"]
+
+1. e4 e5 2. Nc3 Nc6 3. Bc4 b6 4. Nf3 Nh6 5. d3 Bc5 6. a3 a5 7. O-O O-O 8. Qe2 d6
+9. Bd2 Bb7 10. Nd5 f6 11. Nxf6+ Kh8 12. Nh5 Re8 13. Bd5 Bxf2+ 14. Rxf2 Nd4 15.
+Nxd4 Bxd5 16. exd5 exd4 17. Qf3 g6 18. Bxh6 gxh5 19. Qf8+ Rxf8 20. Rxf8+ Qxf8
+21. Bxf8 Rxf8 22. b4 axb4 23. a4 b3 24. cxb3 c5 25. a5 bxa5 26. Rxa5 h4 27. Ra1
+Rb8 28. h3 Rxb3 29. g4 hxg3 30. h4 Rxd3 31. Ra8+ Kg7 32. Kg2 Rd2+ 33. Kxg3 Rg2+
+34. Kf4 d3 35. Ra7+ Kg6 36. Rxh7 d2 37. h5+ Kxh7 38. Kf5 d1=Q 39. Ke6 Qe1+ 40.
+Kd7 Rg7+ 41. Kxd6 Qe7+ 42. Kc6 Qc7+ 43. Kb5 Qb7+ 44. Kxc5 Qxd5+ 45. Kb4 Rc7 46.
+Ka3 Qb5 47. Ka2 Ra7# 0-1

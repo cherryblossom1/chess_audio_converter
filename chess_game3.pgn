@@ -1,0 +1,21 @@
+[Event "vs Computer"]
+[Site "Chess.com"]
+[Date "2022.02.21"]
+[Round "?"]
+[White "Sven-BOT"]
+[Black "guyswithacape"]
+[Result "0-1"]
+[ECO "A40"]
+[WhiteElo "1100"]
+[BlackElo "1175"]
+[TimeControl "0"]
+[EndDate "2022.02.21"]
+[Termination "guyswithacape won by checkmate"]
+
+1. Nf3 Nc6 2. d4 d5 3. c4 e6 4. Qc2 Bb4+ 5. Kd1 Nf6 6. Qa4 O-O 7. c5 a5 8. Kc2
+Bd7 9. a3 b5 10. Qb3 a4 11. Qa2 Nxd4+ 12. Nxd4 Bxc5 13. Nf3 c6 14. Rg1 Qb8 15.
+h3 e5 16. e3 e4 17. Nh4 Qh2 18. Rh1 Qxh1 19. Nd2 Qh2 20. Nb1 Ne8 21. Nc3 Nd6 22.
+Qb1 Nf5 23. Nxb5 cxb5 24. Nxf5 Bxf5 25. Qa2 Be6 26. Bd2 f5 27. Re1 Rfc8 28. Bc3
+Qg1 29. b4 Bb6 30. Kb2 Qxf2+ 31. Re2 Qxf1 32. Rd2 Rxc3 33. Kxc3 d4+ 34. Kb2 Bxa2
+35. Kxa2 d3 36. Rb2 Bxe3 37. h4 Qc1 38. Rb1 Qc2+ 39. Rb2 Qc4+ 40. Ka1 Bd4 41.
+Kb1 Bxb2 42. Kxb2 Rc8 43. Ka1 Qb3 44. g3 Rc1# 0-1
