@@ -21,20 +21,24 @@ board=chess.Board()
 moves=None
 tone_dur=None
 Fs = 44100  # sampling frequency
-dur = 420  # note duration in milliseconds
+dur = 350  # note duration in milliseconds
 
-def butter_lowpass(cutoff, fs, order=2):
-    nyquist = 0.5 * fs
-    normal_cutoff = cutoff / nyquist
-    b, a = butter(order, normal_cutoff, btype='low', analog=False)
-    return b, a
+def sdelay(R,x):
+    L = x.shape[0]
+    b = np.sinc(np.arange(L) - R)
+    y = lfilter(b,[1],x)
+    return y
 
-def apply_lowpass_filter(data, cutoff, fs, order=2):
-    #b, a = butter_lowpass(cutoff, fs, order=order)
-    b = firls(numtaps=order,fs=fs,bands=[0,cutoff],desired=[1,0.1])
-    a = [1]
-    filtered_data = lfilter(b, a, data)
-    return filtered_data
+def reverb(R,alpha,x):
+    b=np.hstack([alpha,np.zeros(R-2),1])
+    a=np.hstack([1,np.zeros(R-2),alpha])
+    y = lfilter(b,a,x)
+    return y
+
+def guitar_filt(freq,samples,x):
+    a = np.hstack([1,np.zeros(samples),[-0.5,-0.5]])
+    y = lfilter([1],a,x)
+    return y
 
 def create_detuned_pulse(freq, dur, Fs, A, num_oscillators, minor):
     # Generate multiple detuned pulse wave oscillators
@@ -46,8 +50,9 @@ def create_detuned_pulse(freq, dur, Fs, A, num_oscillators, minor):
     elif num_oscillators==4:
         detune_factor = [1,5/4*(1-minor) + 6/5*minor,3/2,15/8*(1-minor) + 7/4*minor]
     else:
-        detune_factor = [1,5/4*(1-minor) + 6/5*minor,3/2]
-            
+        detune_factor = [1]
+    
+    offset=400                          # offset in milliseconds
     for i in range(num_oscillators):
         detuned_freq = freq*detune_factor[i]                            # Generate harmonics
         
@@ -55,19 +60,27 @@ def create_detuned_pulse(freq, dur, Fs, A, num_oscillators, minor):
         samples = int(Fs / detuned_freq)
         cycles = int(detuned_freq*dur/1000)
         #pulse_table = A/num_oscillators*(np.hstack((np.ones(samples//2), -1*np.ones(samples//2))))
-        triagTable = A/num_oscillators*np.hstack((np.linspace(1,-1,int(samples/2)),np.linspace(-1,1,int(samples/2))))
-        pulse = np.tile(triagTable, cycles)
+        #triagTable = A/num_oscillators*np.hstack((np.linspace(1,-1,int(samples/2)),np.linspace(-1,1,int(samples/2))))
+        #randTable = A/num_oscillators*np.random.randn(samples)
+        impulse = A/num_oscillators*np.hstack([1,np.zeros(samples*cycles-1)])
+        
+        # turn into guitar sound
+        #pulse = guitar_filt(detuned_freq,samples,np.tile(triagTable, cycles))
+        pulse = guitar_filt(detuned_freq,samples,impulse)
+        
+        # add reverb
+        #pulse = reverb(2,0.9,pulse)
+        
+        # add delay
+        pulse = sdelay(Fs/offset*i,pulse)
+        
         tones.append(pulse)
     # Combine the detuned oscillators
     tone = np.zeros(np.max([i.shape for i in tones]))
     for i in range(num_oscillators):
         tone[:tones[i].shape[0]] += tones[i]
-    cutoff_frequency = 6000  # Adjust as desired
-    filter_order = 13  # Adjust as desired
     
-    # Apply the low-pass filter
-    filtered_audio = apply_lowpass_filter(tone,cutoff_frequency,Fs,filter_order)
-    return filtered_audio
+    return tone
 
 def parse_chess_board(fname,Fs,dur):
     # setup parameters
@@ -75,7 +88,10 @@ def parse_chess_board(fname,Fs,dur):
     board_file=chess.FILE_NAMES
     board_rank=chess.RANK_NAMES
     board_misc=['x','-','O','#','+']
-    piece_freq=[175,220,131,165,195,247]        # in order: pawn, rook, knight, bishop, queen, king
+    
+    # in order: pawn, rook, knight, bishop, queen, king
+    piece_freq=[175,220,131,165,195,247]
+    #piece_freq = 220*(2**((np.random.choice(36,6,replace=False)-1)/12))
     
     # open game and detect moves
     pgn_test = open(fname, encoding='utf-8')
@@ -167,7 +183,8 @@ def play_board():
         svg_data = svg.board(board, size=200)
         for ind,move in enumerate(moves):
             board.push(move)
-            if not ind: sound.play()                # start playing at the first move only
+            if not ind:
+                sound.play()                # start playing at the first move only
             image_widget.delete('all')
             image = Image.open(f'./.gallery/board_{ind}.png')
             tk_image = ImageTk.PhotoImage(image)
@@ -180,9 +197,11 @@ def play_board():
 # Create a function to quit the program
 def quit_program():
     global sound
-    window.quit()
-    window.destroy()
-    sound.stop()
+    if window is not None:
+        window.quit()
+        window.destroy()
+    if sound is not None:
+        sound.stop()
     if os.path.isdir('./.gallery'):
         shutil.rmtree('./.gallery')
 
